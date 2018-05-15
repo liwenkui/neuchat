@@ -1,0 +1,50 @@
+spring:
+  profiles:
+    active: dev
+  application:
+    name: neuchat-app
+
+#==========================================================
+# 单机开发(dev)环境配置
+# - db = oracle
+# - port = 8080
+#==========================================================
+---
+
+spring.profiles: dev
+spring.profiles.include: appConfig,dev_mysql,dev_port
+
+
+#==========================================================
+# 开发服务端口
+#==========================================================
+---
+
+spring:
+  profiles: dev_port
+server:
+  port: 8080
+
+#-----------------------------
+# 开发(dev)环境-持久层配置
+# -支持自动生成数据库
+#-----------------------------
+#mysql 开发环境
+---
+spring:
+  profiles: dev_mysql
+  datasource:
+    url: jdbc:mysql://localhost:3306/neuchat?useSSL=false&useUnicode=true&characterEncoding=utf-8
+    username: neuchat
+    password: neuchat
+    driverClassName: com.mysql.jdbc.Driver
+#    tomcat:
+#      test-on-borrow: true
+#      test-while-idle: true
+#      time-between-eviction-runs-millis: 3600000
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+        id.new_generator_mappings: false
+        hbm2ddl.auto: update
