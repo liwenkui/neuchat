@@ -75,7 +75,7 @@ angular.module('hello', [ 'ngRoute' ]).config(function($routeProvider) {
 
     }).controller('home', function($http) {
     var self = this;
-    $http.get('http://localhost:9000').then(function(response) {
+    $http.get('resource').then(function(response) {
         self.greeting = response.data;
     })
 });
