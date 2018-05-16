@@ -1,6 +1,7 @@
 package org.neu.neuchat.security;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
@@ -9,6 +10,7 @@ import javax.persistence.*;
  * 用户信息
  */
 @Entity
+@NoArgsConstructor
 @Table(name = "SYS_USER")
 public class User {
 

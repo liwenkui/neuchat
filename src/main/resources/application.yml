@@ -14,7 +14,14 @@ spring:
 spring.profiles: dev
 spring.profiles.include: appConfig,dev_mysql,dev_port
 
-
+#==========================================================
+# appconfig
+#==========================================================
+---
+spring:
+  profiles: appConfig
+security:
+  ignored: /**/favicon.ico,/js/**,/css/**
 #==========================================================
 # 开发服务端口
 #==========================================================
