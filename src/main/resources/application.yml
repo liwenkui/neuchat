@@ -1,8 +1,8 @@
 spring:
-  profiles:
-    active: dev
   application:
     name: neuchat-app
+  profiles:
+    active: dev
 
 #==========================================================
 # 单机开发(dev)环境配置
@@ -12,7 +12,7 @@ spring:
 ---
 
 spring.profiles: dev
-spring.profiles.include: appConfig,dev_mysql,dev_port
+spring.profiles.include: appConfig,dev_mem,dev_port,h2
 
 #==========================================================
 # appconfig
@@ -32,26 +32,21 @@ spring:
 server:
   port: 8080
 
-#-----------------------------
-# 开发(dev)环境-持久层配置
-# -支持自动生成数据库
-#-----------------------------
-#mysql 开发环境
+#H2 内存数据库测试环境
 ---
 spring:
-  profiles: dev_mysql
+  profiles: dev_mem
   datasource:
-    url: jdbc:mysql://localhost:3306/neuchat?useSSL=false&useUnicode=true&characterEncoding=utf-8
-    username: neuchat
-    password: neuchat
-    driverClassName: com.mysql.jdbc.Driver
-#    tomcat:
-#      test-on-borrow: true
-#      test-while-idle: true
-#      time-between-eviction-runs-millis: 3600000
+    url: jdbc:h2:mem:testdb
+    driverClassName: org.h2.Driver
+    data-username: sa
+    data-password:
   jpa:
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQL5Dialect
-        id.new_generator_mappings: false
-        hbm2ddl.auto: update
+    database: H2
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+    database-platform: org.hibernate.dialect.H2Dialect
+  h2:
+    console:
+      enabled: true
