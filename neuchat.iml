@@ -113,5 +113,7 @@
     <orderEntry type="library" scope="TEST" name="Maven: commons-codec:commons-codec:1.10" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.webjars:angularjs:1.4.9" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.webjars:jasmine:2.0.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.webjars:sockjs-client:1.0.2" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.webjars:stomp-websocket:2.3.3" level="project" />
   </component>
 </module>

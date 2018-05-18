@@ -1,51 +1,55 @@
-angular.module('hello', [ 'ngRoute' ]).config(function($routeProvider) {
+angular.module('hello', ['ngRoute']).config(function ($routeProvider) {
 
     $routeProvider.when('/', {
-        templateUrl : 'home.html',
-        controller : 'home',
+        templateUrl: 'home.html',
+        controller: 'home',
         controllerAs: 'controller'
     }).when('/login', {
-        templateUrl : 'login.html',
-        controller : 'navigation',
+        templateUrl: 'login.html',
+        controller: 'navigation',
+        controllerAs: 'controller'
+    }).when('/signUp', {
+        templateUrl: 'signup.html',
+        controller: 'signUp',
         controllerAs: 'controller'
     }).otherwise('/');
 
 }).controller('navigation',
 
-    function($rootScope, $http, $location, $route) {
+    function ($rootScope, $http, $location, $route) {
 
         var self = this;
 
-        self.tab = function(route) {
+        self.tab = function (route) {
             return $route.current && route === $route.current.controller;
         };
 
-        var authenticate = function(callback) {
+        var authenticate = function (callback) {
 
-            $http.get('user').then(function(response) {
+            $http.get('user').then(function (response) {
                 if (response.data.name) {
                     $rootScope.authenticated = true;
                 } else {
                     $rootScope.authenticated = false;
                 }
                 callback && callback();
-            }, function() {
+            }, function () {
                 $rootScope.authenticated = false;
                 callback && callback();
             });
 
-        }
+        };
 
         authenticate();
 
         self.credentials = {};
-        self.login = function() {
+        self.login = function () {
             $http.post('login', $.param(self.credentials), {
-                headers : {
-                    "content-type" : "application/x-www-form-urlencoded"
+                headers: {
+                    "content-type": "application/x-www-form-urlencoded"
                 }
-            }).then(function() {
-                authenticate(function() {
+            }).then(function () {
+                authenticate(function () {
                     if ($rootScope.authenticated) {
                         console.log("Login succeeded")
                         $location.path("/");
@@ -58,7 +62,7 @@ angular.module('hello', [ 'ngRoute' ]).config(function($routeProvider) {
                         $rootScope.authenticated = false;
                     }
                 });
-            }, function() {
+            }, function () {
                 console.log("Login failed")
                 $location.path("/login");
                 self.error = true;
@@ -66,16 +70,73 @@ angular.module('hello', [ 'ngRoute' ]).config(function($routeProvider) {
             })
         };
 
-        self.logout = function() {
-            $http.post('logout', {}).finally(function() {
+        self.logout = function () {
+            $http.post('logout', {}).finally(function () {
                 $rootScope.authenticated = false;
                 $location.path("/");
             });
         }
 
-    }).controller('home', function($http) {
-    var self = this;
-    $http.get('resource').then(function(response) {
-        self.greeting = response.data;
     })
-});
+    .controller('home', function ($http, $scope) {
+        var self = this;
+        var stompClient = null;
+
+        var setConnected = function (connected) {
+            $("#connect").prop("disabled", connected);
+            $("#disconnect").prop("disabled", !connected);
+            if (connected) {
+                $("#conversation").show();
+            }
+            else {
+                $("#conversation").hide();
+            }
+            $("#greetings").html("");
+        };
+
+        self.connectWs = function () {
+            var socket = new SockJS('/ws-connect');
+            stompClient = Stomp.over(socket);
+            stompClient.connect({}, function (frame) {
+                setConnected(true);
+                console.log('Connected: ' + frame);
+                stompClient.subscribe('/topic/all', function (message) {
+                    self.showMessage(message.body);
+                });
+            });
+        };
+
+        self.showMessage = function (message) {
+            console.log("receive message : " + message);
+            $("#greetings").append("<tr><td>" + message + "</td></tr>");
+        };
+
+        self.disconnect = function () {
+            if (stompClient !== null) {
+                stompClient.disconnect();
+            }
+            setConnected(false);
+            console.log("Disconnected");
+        };
+
+        self.send = function () {
+            console.log("send message is :" + $scope.message);
+            stompClient.send("/app/all", {}, $scope.message)
+        };
+
+    }).controller('signUp',
+    function ($scope, $http, $location, $route) {
+
+        var self = this;
+
+        self.signUp = function () {
+            console.log("crate new user : ", $scope.user);
+            $http.post('/user',$scope.user).then(function (rep) {
+                alert("signed Up. please login");
+                $location.path("/login");
+            },function (reason) {
+                alert("error ，"+reason.data);
+                console.log("error : " + reason.data);
+            })
+        }
+    });

@@ -1,7 +1,8 @@
 <!doctype html>
 <html>
 <head>
-	<title>Hello AngularJS</title>
+	<title>NeuChat</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<link
 			href="css/angular-bootstrap.css"
 			rel="stylesheet">
@@ -17,6 +18,7 @@
 	<ul class="nav nav-pills" role="tablist">
 		<li ng-class="{active:nav.tab('home')}"><a href="#/">home</a></li>
 		<li ng-class="{active:nav.tab('navigation')}"><a href="#/login">login</a></li>
+		<li ng-show="!authenticated" ng-class="{active:nav.tab('signUp')}"><a href="#/signUp">signUp</a></li>
 		<li ng-show="authenticated"><a href="" ng-click="nav.logout()">logout</a></li>
 	</ul>
 </div>

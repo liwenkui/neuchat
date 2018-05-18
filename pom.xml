@@ -45,6 +45,7 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
@@ -79,6 +80,18 @@
 			<version>${jasmine.version}</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>sockjs-client</artifactId>
+			<version>${sockjs.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>stomp-websocket</artifactId>
+			<version>${stomp.version}</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<properties>
@@ -89,6 +102,8 @@
 		<bootstrap.version>3.3.7-1</bootstrap.version>
 		<jquery.version>2.2.4</jquery.version>
 		<jasmine.version>2.0.0</jasmine.version>
+		<sockjs.version>1.0.2</sockjs.version>
+		<stomp.version>2.3.3</stomp.version>
 	</properties>
 
 	<build>
@@ -163,6 +178,16 @@
 						<groupId>org.webjars</groupId>
 						<artifactId>bootstrap</artifactId>
 						<version>${bootstrap.version}</version>
+					</dependency>
+					<dependency>
+						<groupId>org.webjars</groupId>
+						<artifactId>sockjs-client</artifactId>
+						<version>${sockjs.version}</version>
+					</dependency>
+					<dependency>
+						<groupId>org.webjars</groupId>
+						<artifactId>stomp-websocket</artifactId>
+						<version>${stomp.version}</version>
 					</dependency>
 				</dependencies>
 			</plugin>
