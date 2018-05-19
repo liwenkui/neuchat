@@ -1,40 +1,60 @@
 <h1>Neu-Chat</h1>
 <div ng-show="authenticated" ng-controller="home as hm">
-	<div class="row" >
-		<div class="col-md-6">
-			<form class="form-inline">
-				<div class="form-group">
-					<label for="connect">WebSocket connection:</label>
-					<button id="connect" class="btn btn-default" type="submit" ng-click="hm.connectWs()">Connect</button>
-					<button id="disconnect" class="btn btn-default" type="submit" disabled="disabled" ng-click="hm.disconnect()">Disconnect
-					</button>
-				</div>
-			</form>
-		</div>
-		<div class="col-md-6">
-			<form class="form-inline">
-				<div class="form-group">
-					<label for="name">send message</label>
-					<input type="text" id="name" class="form-control" placeholder="Your message here..." ng-model="message">
-				</div>
-				<button id="send" class="btn btn-default" type="submit" ng-click="hm.send()">Send</button>
-			</form>
-		</div>
-		<div class="row">
-			<div class="col-md-12">
-				<table id="conversation" class="table table-striped">
-					<thead>
-					<tr>
-						<th>Message</th>
-					</tr>
-					</thead>
-					<tbody id="greetings">
-					</tbody>
-				</table>
-			</div>
-		</div>
-	</div>
+    <div class="row">
+        <div class="col-md-6">
+            <form class="form-inline">
+                <div class="form-group">
+                    <label for="connect">WebSocket connection:</label>
+                    <button id="connect" class="btn btn-default" type="submit" ng-click="hm.connectWs()">Connect
+                    </button>
+                    <button id="disconnect" class="btn btn-default" type="submit" disabled="disabled"
+                            ng-click="hm.disconnect()">Disconnect
+                    </button>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-6">
+            <form class="form-inline">
+                <div class="form-group">
+                    <label for="name">send message</label>
+                    <input type="text" id="name" class="form-control" placeholder="Your message here..."
+                           ng-model="message">
+                </div>
+                <button id="send" class="btn btn-default" type="submit" ng-click="hm.send()">Send</button>
+            </form>
+        </div>
+        <div class="row">
+            <div class="col-md-7">
+                <table id="conversation" class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Message</th>
+                    </tr>
+                    </thead>
+                    <tbody id="greetings">
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-5">
+                <table id="online" class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Users</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="u in hm.users">
+                        <td>{{u}}
+                            <button id="sentTo" class="btn btn-default" type="submit" ng-click="hm.sendMessageToUser(u)">SendTo</button>
+                        <td>
+                    </tr>
+                    </tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
-<div  ng-show="!authenticated">
-	<p>Login to see your greeting</p>
+<div ng-show="!authenticated">
+    <p>Login to see your greeting</p>
 </div>

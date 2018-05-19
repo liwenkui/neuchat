@@ -32,6 +32,7 @@ angular.module('hello', ['ngRoute']).config(function ($routeProvider) {
 
             $http.get('user').then(function (response) {
                 if (response.data.name) {
+                    $rootScope.username = response.data.name;
                     $rootScope.authenticated = true;
                 } else {
                     $rootScope.authenticated = false;
@@ -93,10 +94,24 @@ angular.module('hello', ['ngRoute']).config(function ($routeProvider) {
         }
 
     })
-    .controller('home', function ($http, $scope) {
+    .controller('home', function ($http, $scope, $rootScope) {
         var self = this;
         var stompClient = null;
-        $scope.users = null;
+        self.users = [];
+
+        Array.prototype.indexOf = function (val) {
+            for (var i = 0; i < this.length; i++) {
+                if (this[i] == val) return i;
+            }
+            return -1;
+        };
+
+        Array.prototype.remove = function (val) {
+            var index = this.indexOf(val);
+            if (index > -1) {
+                this.splice(index, 1);
+            }
+        };
 
         /**
          * 设置连接行为
@@ -132,10 +147,15 @@ angular.module('hello', ['ngRoute']).config(function ($routeProvider) {
                 //监听登录事件
                 stompClient.subscribe('/topic/connect', function (message) {
                     self.showNewUser(message.body);
+                    self.users.push(message.body);
+                    $scope.$apply();
                 });
                 //监听离开事件
                 stompClient.subscribe('/topic/disconnect', function (message) {
                     self.showDisconnect(message.body);
+                    self.users.remove(message.body);
+                    $scope.$apply();
+
                 });
                 //监听私信
                 stompClient.subscribe('/user/queue/private', function (message) {
@@ -162,7 +182,7 @@ angular.module('hello', ['ngRoute']).config(function ($routeProvider) {
          * @param message
          */
         self.privateMessage = function (message) {
-            $("#greetings").append("<tr><td>" + "receive private message : " + message + "</td></tr>");
+            $("#greetings").append("<tr><td>" + "private message : " + message + "</td></tr>");
         };
 
         /**
@@ -170,17 +190,18 @@ angular.module('hello', ['ngRoute']).config(function ($routeProvider) {
          * @param user 用户
          * @param message 消息
          */
-        self.sendMessageToUser = function (user, message) {
+        self.sendMessageToUser = function (user) {
             console.log("send private message to " + user);
-            stompClient.send("/user" + "/" + user + "/queue/private", {}, message);
+            stompClient.send("/user" + "/" + user + "/queue/private", {}, $rootScope.username + " : " + $scope.message);
+            $("#greetings").append("<tr><td>" + "send private message : " + $scope.message + " to " + user + "</td></tr>");
         };
 
         /**
          * 显示目前登录用户
-         * @param users
+         * @param us
          */
-        self.showCurrentOnlineUsers = function (users) {
-            $scope.users = users;
+        self.showCurrentOnlineUsers = function (us) {
+            self.users = us;
         };
 
         /**
