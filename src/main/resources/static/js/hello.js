@@ -273,7 +273,7 @@ angular.module('hello', ['ngRoute']).config(function ($routeProvider) {
                 $location.path("/login");
             }, function (reason) {
                 alert("error ，" + reason.data);
-                console.log("error : " + reason.data);
+                console.log("error : " + reason.data.error);
             })
         }
     });

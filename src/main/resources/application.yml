@@ -15,6 +15,13 @@ spring.profiles: dev
 spring.profiles.include: appConfig,dev_mem,dev_port,h2
 
 #==========================================================
+# 日志级别
+#==========================================================
+---
+logging.level:
+  root: INFO
+
+#==========================================================
 # appconfig
 #==========================================================
 ---
@@ -49,4 +56,4 @@ spring:
     database-platform: org.hibernate.dialect.H2Dialect
   h2:
     console:
-      enabled: true
+      enabled: false

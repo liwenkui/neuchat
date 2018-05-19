@@ -10,6 +10,9 @@ public class NeuchatUserDetails extends User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        if (super.getName().equals("admin")) {
+            return AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_ADMIN");
+        }
         return AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER");
     }
 
@@ -39,7 +42,7 @@ public class NeuchatUserDetails extends User implements UserDetails {
     }
 
     public NeuchatUserDetails(User user) {
-        super(user.getId(),user.getName(), user.getEmail(), user.getPassword(), user.getAccountNonExpired(),
+        super(user.getId(), user.getName(), user.getEmail(), user.getPassword(), user.getAccountNonExpired(),
                 user.getAccountNonLocked(), user.getCredentialsNonExpired(), user.getEnabled());
 
     }

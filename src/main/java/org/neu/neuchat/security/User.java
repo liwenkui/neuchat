@@ -21,6 +21,7 @@ public class User {
     /**
      * 用户名
      */
+    @Column(unique = true)
     private String name;
 
     /**
@@ -54,7 +55,7 @@ public class User {
      */
     private Boolean isEnabled;
 
-    public User(Integer id,String name, String email, String password, Boolean isAccountNonExpired, Boolean isAccountNonLocked, Boolean isCredentialsNonExpired, Boolean isEnabled) {
+    public User(Integer id, String name, String email, String password, Boolean isAccountNonExpired, Boolean isAccountNonLocked, Boolean isCredentialsNonExpired, Boolean isEnabled) {
         this.id = id;
         this.name = name;
         this.email = email;

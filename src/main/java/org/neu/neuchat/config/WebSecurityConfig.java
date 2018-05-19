@@ -49,10 +49,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.logout().and()
 				.authorizeRequests()
 					.antMatchers("/index.html", "/home.html", "/login.html","/signup.html", "/","/user").permitAll()
-					.anyRequest().authenticated()
+                    .anyRequest().authenticated()
 					.and()
 				.csrf()
-					.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
-			// @formatter:on
+					.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());// @formatter:on
     }
 }
