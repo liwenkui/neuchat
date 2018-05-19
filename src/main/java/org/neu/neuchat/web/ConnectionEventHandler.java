@@ -18,7 +18,10 @@ public class ConnectionEventHandler {
         this.template = template;
     }
 
-
+    /**
+     * 断开连接事件处理
+     * @param event
+     */
     @EventListener
     public void disconnect(SessionDisconnectEvent event) {
         log.info("{} is disconnected", event.getUser().getName());

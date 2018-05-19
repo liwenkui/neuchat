@@ -8,6 +8,7 @@ import org.neu.neuchat.security.User;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 
 /**
@@ -27,6 +28,9 @@ public class Message {
 
     private String message;
 
+    /**
+     * 创建时间
+     */
     private Timestamp createTime;
 
     private Message() {
@@ -63,7 +67,7 @@ public class Message {
     }
 
     public String getCreateTime() {
-        return createTime.toLocalDateTime().toString();
+        return createTime.toLocalDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 
     public void setCreateTime(Timestamp createTime) {
