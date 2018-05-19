@@ -54,7 +54,8 @@ public class User {
      */
     private Boolean isEnabled;
 
-    public User(String name, String email, String password, Boolean isAccountNonExpired, Boolean isAccountNonLocked, Boolean isCredentialsNonExpired, Boolean isEnabled) {
+    public User(Integer id,String name, String email, String password, Boolean isAccountNonExpired, Boolean isAccountNonLocked, Boolean isCredentialsNonExpired, Boolean isEnabled) {
+        this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
@@ -62,6 +63,14 @@ public class User {
         this.isAccountNonLocked = isAccountNonLocked;
         this.isCredentialsNonExpired = isCredentialsNonExpired;
         this.isEnabled = isEnabled;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getName() {

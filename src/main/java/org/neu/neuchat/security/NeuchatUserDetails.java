@@ -39,7 +39,7 @@ public class NeuchatUserDetails extends User implements UserDetails {
     }
 
     public NeuchatUserDetails(User user) {
-        super(user.getName(), user.getEmail(), user.getPassword(), user.getAccountNonExpired(),
+        super(user.getId(),user.getName(), user.getEmail(), user.getPassword(), user.getAccountNonExpired(),
                 user.getAccountNonLocked(), user.getCredentialsNonExpired(), user.getEnabled());
 
     }

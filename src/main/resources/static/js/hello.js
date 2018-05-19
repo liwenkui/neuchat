@@ -103,7 +103,34 @@ angular.module('hello', ['ngRoute']).config(function ($routeProvider) {
                 stompClient.subscribe('/topic/all', function (message) {
                     self.showMessage(message.body);
                 });
+                stompClient.send("/app/connect", {}, "connect");
+
+                stompClient.subscribe('/topic/connect', function (message) {
+                    self.showNewUser(message.body);
+                });
+                stompClient.subscribe('/topic/disconnect', function (message) {
+                    self.showDisconnect(message.body);
+                });
+                $http.get("/latest?page=0&size=10").then(function (rep) {
+                    self.showHistoryMessage(rep.data.content);
+                }, function (reason) {
+                    console.log("error " + reason.toString());
+                })
             });
+        };
+
+        self.showHistoryMessage = function (message) {
+            message.forEach(function (value) {
+                $("#greetings").append("<tr><td>" + "history message " + value.user.name + " : " + value.message  +" time: "+value.createTime+ "</td></tr>");
+            })
+        };
+
+        self.showDisconnect = function (message) {
+            $("#greetings").append("<tr><td>" + message + " left the chat room " + "</td></tr>");
+        };
+
+        self.showNewUser = function (message) {
+            $("#greetings").append("<tr><td>" + message + " enters the chat room" + "</td></tr>");
         };
 
         self.showMessage = function (message) {
@@ -121,7 +148,7 @@ angular.module('hello', ['ngRoute']).config(function ($routeProvider) {
 
         self.send = function () {
             console.log("send message is :" + $scope.message);
-            stompClient.send("/app/all", {}, $scope.message)
+            stompClient.send("/app/all", {}, $scope.message);
         };
 
     }).controller('signUp',
@@ -131,11 +158,11 @@ angular.module('hello', ['ngRoute']).config(function ($routeProvider) {
 
         self.signUp = function () {
             console.log("crate new user : ", $scope.user);
-            $http.post('/user',$scope.user).then(function (rep) {
+            $http.post('/user', $scope.user).then(function (rep) {
                 alert("signed Up. please login");
                 $location.path("/login");
-            },function (reason) {
-                alert("error ，"+reason.data);
+            }, function (reason) {
+                alert("error ，" + reason.data);
                 console.log("error : " + reason.data);
             })
         }

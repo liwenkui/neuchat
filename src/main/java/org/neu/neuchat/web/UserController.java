@@ -46,7 +46,7 @@ public class UserController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public User createUser(@RequestBody UserDTO dto) {
-        User user = new User(dto.getUsername(), dto.getEmail(), passwordEncoder.encode(dto.getPassword()),
+        User user = new User(null,dto.getUsername(), dto.getEmail(), passwordEncoder.encode(dto.getPassword()),
                 true, true, true, true);
         return userRepository.save(user);
     }
