@@ -31,9 +31,9 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
      */
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.setApplicationDestinationPrefixes("/app")
-                .setUserDestinationPrefix("/user")
-                .enableSimpleBroker("/topic", "/queue");
+        registry.setApplicationDestinationPrefixes("/app")//给应用发
+                .setUserDestinationPrefix("/user")//给用户发
+                .enableSimpleBroker("/topic", "/queue");//广播
     }
 
 }

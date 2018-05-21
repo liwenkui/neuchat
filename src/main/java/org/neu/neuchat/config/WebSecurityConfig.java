@@ -45,13 +45,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         // @formatter:off
 			http
-				.formLogin().and()
-				.logout().and()
-				.authorizeRequests()
-					.antMatchers("/index.html", "/home.html", "/login.html","/signup.html", "/","/user").permitAll()
-                    .anyRequest().authenticated()
+				.formLogin().and()//表单登录
+				.logout().and()//登出
+				.authorizeRequests()//授权配置
+					.antMatchers("/index.html", "/home.html", "/login.html","/signup.html", "/","/user").permitAll()//允许访问
+                    .anyRequest().authenticated()//所有请求必须认证
 					.and()
-				.csrf()
+				.csrf()//跨域攻击保护
 					.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());// @formatter:on
     }
 }
