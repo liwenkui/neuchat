@@ -1,7 +1,7 @@
 <div class="alert alert-danger" ng-show="error">
     There was a problem sign up. Please try again.
 </div>
-<form role="form" ng-controller="signUp as su" ng-submit="su.signUp()">
+<form role="form"  ng-submit="signUp()">
     <div class="form-group">
         <label for="username">Username:</label> <input type="text"
                                                        class="form-control" id="username" name="username" ng-model="user.username"/>

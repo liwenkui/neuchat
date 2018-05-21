@@ -6,8 +6,7 @@ angular.module('hello', ['ngRoute']).config(function ($routeProvider) {
         controllerAs: 'controller'
     }).when('/login', {
         templateUrl: 'login.html',
-        controller: 'navigation',
-        controllerAs: 'controller'
+        controller: 'navigation'
     }).when('/signUp', {
         templateUrl: 'signup.html',
         controller: 'signUp',
@@ -16,11 +15,9 @@ angular.module('hello', ['ngRoute']).config(function ($routeProvider) {
 
 }).controller('navigation',
 
-    function ($rootScope, $http, $location, $route) {
+    function ($rootScope, $http, $location, $route,$scope) {
 
-        var self = this;
-
-        self.tab = function (route) {
+        $scope.tab = function (route) {
             return $route.current && route === $route.current.controller;
         };
 
@@ -47,13 +44,13 @@ angular.module('hello', ['ngRoute']).config(function ($routeProvider) {
 
         authenticate();
 
-        self.credentials = {};
+        $scope.credentials = {};
 
         /**
          * 登录
          */
-        self.login = function () {
-            $http.post('login', $.param(self.credentials), {
+        $scope.login = function () {
+            $http.post('login', $.param($scope.credentials), {
                 headers: {
                     "content-type": "application/x-www-form-urlencoded"
                 }
@@ -64,13 +61,13 @@ angular.module('hello', ['ngRoute']).config(function ($routeProvider) {
                     if ($rootScope.authenticated) {
                         console.log("Login succeeded")
                         $location.path("/"); //跳到主页
-                        self.error = false;
+                        $scope.error = false;
                         $rootScope.authenticated = true; //将flag置为true
                         //获取用户信息失败
                     } else {
                         console.log("Login failed with redirect")
                         $location.path("/login"); //继续在login页面
-                        self.error = true;
+                        $scope.error = true;
                         $rootScope.authenticated = false;
                     }
                 });
@@ -78,7 +75,7 @@ angular.module('hello', ['ngRoute']).config(function ($routeProvider) {
                 //失败
                 console.log("Login failed")
                 $location.path("/login");
-                self.error = true;
+                $scope.error = true;
                 $rootScope.authenticated = false;
             })
         };
@@ -86,7 +83,7 @@ angular.module('hello', ['ngRoute']).config(function ($routeProvider) {
         /**
          * 登出
          */
-        self.logout = function () {
+        $scope.logout = function () {
             $http.post('logout', {}).finally(function () {
                 $rootScope.authenticated = false;
                 $location.path("/");
@@ -95,9 +92,8 @@ angular.module('hello', ['ngRoute']).config(function ($routeProvider) {
 
     })
     .controller('home', function ($http, $scope, $rootScope) {
-        var self = this;
         var stompClient = null;
-        self.users = [];
+        $scope.users = [];
 
         Array.prototype.indexOf = function (val) {
             for (var i = 0; i < this.length; i++) {
@@ -132,7 +128,7 @@ angular.module('hello', ['ngRoute']).config(function ($routeProvider) {
         /**
          * 连接
          */
-        self.connectWs = function () {
+        $scope.connectWs = function () {
             var socket = new SockJS('/ws-connect');
             stompClient = Stomp.over(socket);
             stompClient.connect({}, function (frame) {
@@ -140,37 +136,37 @@ angular.module('hello', ['ngRoute']).config(function ($routeProvider) {
                 console.log('Connected: ' + frame);
                 //监听聊天信息
                 stompClient.subscribe('/topic/all', function (message) {
-                    self.showMessage(message.body);
+                    $scope.showMessage(message.body);
                 });
                 //发送登录信息
                 stompClient.send("/app/connect", {}, "connect");
                 //监听登录事件
                 stompClient.subscribe('/topic/connect', function (message) {
-                    self.showNewUser(message.body);
-                    self.users.push(message.body);
-                    $scope.$apply();
+                    $scope.showNewUser(message.body);
+                    $scope.users.push(message.body);
+                    // $scope.$apply();
                 });
                 //监听离开事件
                 stompClient.subscribe('/topic/disconnect', function (message) {
-                    self.showDisconnect(message.body);
-                    self.users.remove(message.body);
-                    $scope.$apply();
+                    $scope.showDisconnect(message.body);
+                    $scope.users.remove(message.body);
+                    // $scope.$apply();
 
                 });
                 //监听私信
                 stompClient.subscribe('/user/queue/private', function (message) {
-                    self.privateMessage(message.body);
+                    $scope.privateMessage(message.body);
                 });
                 //获取上十条聊天记录
                 $http.get("/latest?page=0&size=10").then(function (rep) {
-                    self.showHistoryMessage(rep.data.content);
+                    $scope.showHistoryMessage(rep.data.content);
                 }, function (reason) {
                     console.log("error " + reason.toString());
                 });
                 //获取所有已连接用户列表
                 $http.get("/allUser").then(function (rep) {
                     console.log("users is : ", rep.data)
-                    self.showCurrentOnlineUsers(rep.data);
+                    $scope.showCurrentOnlineUsers(rep.data);
                 }, function (reason) {
                     console.log("error " + reason.toString())
                 });
@@ -181,7 +177,7 @@ angular.module('hello', ['ngRoute']).config(function ($routeProvider) {
          * 渲染私信
          * @param message
          */
-        self.privateMessage = function (message) {
+        $scope.privateMessage = function (message) {
             $("#greetings").append("<tr><td>" + "private message : " + message + "</td></tr>");
         };
 
@@ -190,7 +186,7 @@ angular.module('hello', ['ngRoute']).config(function ($routeProvider) {
          * @param user 用户
          * @param message 消息
          */
-        self.sendMessageToUser = function (user) {
+        $scope.sendMessageToUser = function (user) {
             console.log("send private message to " + user);
             stompClient.send("/user" + "/" + user + "/queue/private", {}, $rootScope.username + " : " + $scope.message);
             $("#greetings").append("<tr><td>" + "send private message : " + $scope.message + " to " + user + "</td></tr>");
@@ -200,15 +196,15 @@ angular.module('hello', ['ngRoute']).config(function ($routeProvider) {
          * 显示目前登录用户
          * @param us
          */
-        self.showCurrentOnlineUsers = function (us) {
-            self.users = us;
+        $scope.showCurrentOnlineUsers = function (us) {
+            $scope.users = us;
         };
 
         /**
          * 显示历史聊天记录
          * @param message
          */
-        self.showHistoryMessage = function (message) {
+        $scope.showHistoryMessage = function (message) {
             message.forEach(function (value) {
                 $("#greetings").append("<tr><td>" + "history message " + value.user.name + " : " + value.message + " time: " + value.createTime + "</td></tr>");
             })
@@ -218,7 +214,7 @@ angular.module('hello', ['ngRoute']).config(function ($routeProvider) {
          * 显示离开事件
          * @param user
          */
-        self.showDisconnect = function (user) {
+        $scope.showDisconnect = function (user) {
             $("#greetings").append("<tr><td>" + user + " left the chat room " + "</td></tr>");
         };
 
@@ -226,7 +222,7 @@ angular.module('hello', ['ngRoute']).config(function ($routeProvider) {
          * 显示进入聊天室记录
          * @param user
          */
-        self.showNewUser = function (user) {
+        $scope.showNewUser = function (user) {
             $("#greetings").append("<tr><td>" + user + " enters the chat room" + "</td></tr>");
         };
 
@@ -234,7 +230,7 @@ angular.module('hello', ['ngRoute']).config(function ($routeProvider) {
          * 显示消息
          * @param message
          */
-        self.showMessage = function (message) {
+        $scope.showMessage = function (message) {
             console.log("receive message : " + message);
             $("#greetings").append("<tr><td>" + message + "</td></tr>");
         };
@@ -242,7 +238,7 @@ angular.module('hello', ['ngRoute']).config(function ($routeProvider) {
         /**
          * 断开ws连接
          */
-        self.disconnect = function () {
+        $scope.disconnect = function () {
             if (stompClient !== null) {
                 stompClient.disconnect();
             }
@@ -253,7 +249,7 @@ angular.module('hello', ['ngRoute']).config(function ($routeProvider) {
         /**
          * 发送聊天信息
          */
-        self.send = function () {
+        $scope.send = function () {
             console.log("send message is :" + $scope.message);
             stompClient.send("/app/all", {}, $scope.message);
         };
@@ -261,12 +257,10 @@ angular.module('hello', ['ngRoute']).config(function ($routeProvider) {
     }).controller('signUp',
     function ($scope, $http, $location, $route) {
 
-        var self = this;
-
         /**
          * 注册用户
          */
-        self.signUp = function () {
+        $scope.signUp = function () {
             console.log("crate new user : ", $scope.user);
             $http.post('/user', $scope.user).then(function (rep) {
                 alert("signed Up. please login");
