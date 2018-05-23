@@ -1,7 +1,6 @@
 package org.neu.neuchat.security;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
@@ -10,7 +9,6 @@ import javax.persistence.*;
  * 用户信息
  */
 @Entity
-@NoArgsConstructor
 @Table(name = "SYS_USER")
 public class User {
 
@@ -54,6 +52,9 @@ public class User {
      * 是否可用
      */
     private Boolean isEnabled;
+
+    public User() {
+    }
 
     public User(Integer id, String name, String email, String password, Boolean isAccountNonExpired, Boolean isAccountNonLocked, Boolean isCredentialsNonExpired, Boolean isEnabled) {
         this.id = id;
